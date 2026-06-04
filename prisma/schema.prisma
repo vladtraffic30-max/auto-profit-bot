@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  INVESTOR
+}
+
+enum CarStatus {
+  BOUGHT
+  IN_TRANSIT
+  PORT
+  IN_REPAIR
+  READY
+  ON_SALE
+  SOLD
+}
+
+enum ExpenseCategory {
+  AUCTION
+  USA_DELIVERY
+  SEA_DELIVERY
+  PORT
+  BROKER
+  CUSTOMS
+  EXCISE
+  VAT
+  CERTIFICATION
+  REGISTRATION
+  COMPANY_SERVICE
+  REPAIR
+  PART
+  ADS
+  MARKETPLACE_COMMISSION
+  OTHER
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  telegramId String   @unique
+  name       String?
+  role       Role     @default(ADMIN)
+  createdAt  DateTime @default(now())
+  cars       Car[]
+}
+
+model Car {
+  id            Int       @id @default(autoincrement())
+  userId        Int
+  user          User      @relation(fields: [userId], references: [id])
+  brand         String
+  model         String
+  year          Int?
+  mileage       Int?
+  vin           String?
+  photoFileId   String?
+  auction       String?
+  status        CarStatus @default(BOUGHT)
+  buyPrice      Float     @default(0)
+  plannedSellPrice Float  @default(0)
+  sellPrice     Float?
+  soldAt        DateTime?
+  boughtAt      DateTime?
+  isDeleted     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  expenses      Expense[]
+ reminders        Reminder[]
+partsSales    PartsSale[]
+debts         Debt[]
+}
+
+model Expense {
+  id        Int             @id @default(autoincrement())
+  carId     Int
+  car       Car             @relation(fields: [carId], references: [id], onDelete: Cascade)
+  category  ExpenseCategory @default(OTHER)
+  title     String
+  amount    Float
+  currency  String          @default("USD")
+  date      DateTime        @default(now())
+  comment   String?
+  fileId    String?
+  createdAt DateTime        @default(now())
+}
+
+model PartsSale {
+  id        Int      @id @default(autoincrement())
+  carId     Int
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  title     String
+  amount    Float
+  currency  String   @default("USD")
+  date      DateTime @default(now())
+  comment   String?
+  createdAt DateTime @default(now())
+}
+model Debt {
+  id         Int      @id @default(autoincrement())
+
+  carId      Int
+  car        Car      @relation(fields: [carId], references: [id])
+
+  title      String
+  amount     Float
+
+  category   String?
+  comment    String?
+
+  isPaid     Boolean  @default(false)
+
+  createdAt  DateTime @default(now())
+}
+
+model Reminder {
+  id        Int      @id @default(autoincrement())
+  carId     Int
+  title     String
+  date      DateTime?
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+
+  car Car @relation(fields: [carId], references: [id], onDelete: Cascade)
+}
+

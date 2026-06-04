@@ -1,0 +1,12 @@
+-- CreateTable
+CREATE TABLE "Debt" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "carId" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "amount" REAL NOT NULL,
+    "category" TEXT,
+    "comment" TEXT,
+    "isPaid" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Debt_carId_fkey" FOREIGN KEY ("carId") REFERENCES "Car" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

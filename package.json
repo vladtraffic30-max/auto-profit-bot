@@ -1,0 +1,26 @@
+{
+  "name": "auto-profit-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot CRM for USA car import profit calculation",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "@types/pdfkit": "^0.17.6",
+    "axios": "^1.16.0",
+    "dotenv": "latest",
+    "exceljs": "^4.4.0",
+    "pdfkit": "^0.18.0",
+    "telegraf": "latest"
+  },
+  "devDependencies": {
+    "nodemon": "latest",
+    "prisma": "^6.19.0"
+  }
+}

@@ -1,0 +1,10 @@
+-- CreateTable
+CREATE TABLE "Reminder" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "carId" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "date" DATETIME,
+    "status" TEXT NOT NULL DEFAULT 'active',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Reminder_carId_fkey" FOREIGN KEY ("carId") REFERENCES "Car" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
