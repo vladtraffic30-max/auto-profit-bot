@@ -254,12 +254,46 @@ function registerCarHandlers(bot) {
     return ctx.reply('✅ Авто відновлено. Воно знову буде в “Мої авто”.');
   });
 
+  bot.action(/^sell_car_(\d+)$/, async (ctx) => {
+  const carId = Number(ctx.match[1]);
+
+  await ctx.answerCbQuery();
+
+  ctx.session.flow = 'SELL_CAR_PRICE';
+  ctx.session.data = { carId };
+
+  return ctx.reply('💰 Введи ціну продажу авто, наприклад 14500:');
+});
+
   bot.on('text', async (ctx, next) => {
     const flow = ctx.session.flow;
     const data = ctx.session.data || {};
     const text = ctx.message.text.trim();
 
     if (!flow) {
+      if (flow === 'SELL_CAR_PRICE') {
+  const carId = data.carId;
+  const sellPrice = Number(text.replace(',', '.')) || 0;
+
+  const car = await ctx.prisma.car.update({
+    where: { id: carId },
+    data: {
+      sellPrice,
+      soldAt: new Date(),
+      status: 'SOLD'
+    }
+  });
+
+  ctx.session.flow = null;
+  ctx.session.data = {};
+
+  const totals = await getCarTotals(ctx.prisma, car.id);
+
+  return ctx.reply(
+    `✅ Авто продано!\n\n${renderCarCard(totals)}`,
+    carCardKeyboard(car.id)
+  );
+}
       return next();
     }
 
