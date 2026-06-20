@@ -270,8 +270,11 @@ function registerCarHandlers(bot) {
     const data = ctx.session.data || {};
     const text = ctx.message.text.trim();
 
-    if (!flow) {
-      if (flow === 'SELL_CAR_PRICE') {
+   if (!flow) {
+    return next();
+}
+
+if (flow === 'SELL_CAR_PRICE') {
   const carId = data.carId;
   const sellPrice = Number(text.replace(',', '.')) || 0;
 
@@ -284,6 +287,16 @@ function registerCarHandlers(bot) {
     }
   });
 
+  ctx.session.flow = null;
+  ctx.session.data = {};
+
+  const totals = await getCarTotals(ctx.prisma, car.id);
+
+  return ctx.reply(
+    `✅ Авто продано!\n\n${renderCarCard(totals)}`,
+    carCardKeyboard(car.id)
+  );
+}
   ctx.session.flow = null;
   ctx.session.data = {};
 
