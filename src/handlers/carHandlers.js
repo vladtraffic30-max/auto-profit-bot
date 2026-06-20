@@ -292,17 +292,17 @@ if (flow === 'SELL_CAR_PRICE') {
 
   const totals = await getCarTotals(ctx.prisma, car.id);
 
-  return ctx.reply(
+   return ctx.reply(
     `✅ Авто продано!\n\n${renderCarCard(totals)}`,
     carCardKeyboard(car.id)
   );
 }
- 
-}
-      return next();
-    }Ф
 
-    if (flow === 'ADD_CAR_BRAND') {
+if (!flow) {
+  return next();
+}
+
+if (flow === 'ADD_CAR_BRAND') {
       data.brand = text;
       ctx.session.flow = 'ADD_CAR_MODEL';
       ctx.session.data = data;
