@@ -254,7 +254,7 @@ function registerCarHandlers(bot) {
     return ctx.reply('✅ Авто відновлено. Воно знову буде в “Мої авто”.');
   });
 
-  bot.action(/^sell_car_(\d+)$/, async (ctx) => {
+  bot.action(/^sell:(\d+)$/, async (ctx) => {
   const carId = Number(ctx.match[1]);
 
   await ctx.answerCbQuery();
