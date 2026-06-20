@@ -298,9 +298,7 @@ if (flow === 'SELL_CAR_PRICE') {
   );
 }
 
-if (!flow) {
-  return next();
-}
+
 
 if (flow === 'ADD_CAR_BRAND') {
       data.brand = text;
